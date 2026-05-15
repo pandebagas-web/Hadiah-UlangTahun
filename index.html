@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HBD Sayangku!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-blue: #a2d2ff;
+            --dark-blue: #2b2d42;
+            --pixel-border: 4px solid #000;
+        }
+
+        * { box-sizing: border-box; }
+        body, html { 
+            margin: 0; padding: 0; overflow-x: hidden;
+            background-color: var(--bg-blue);
+            font-family: 'Press Start 2P', cursive;
+        }
+
+        /* Container Utama */
+        .container {
+            display: flex; flex-direction: column; align-items: center;
+            justify-content: center; min-height: 100vh; text-align: center;
+            padding: 20px;
+        }
+
+        /* BORDER 2D PIXEL */
+        .pixel-box {
+            background: white;
+            border: var(--pixel-border);
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+            padding: 20px;
+            position: relative;
+            max-width: 90%;
+        }
+
+        .pixel-box::before {
+            content: ""; position: absolute; top: -8px; left: -8px; right: -8px; bottom: -8px;
+            border: 2px solid #000; pointer-events: none;
+        }
+
+        .btn-pixel {
+            margin-top: 20px; padding: 15px 25px;
+            background: #bdc3c7; border: var(--pixel-border);
+            border-radius: 10px; cursor: pointer;
+            font-family: 'Press Start 2P', cursive; font-size: 10px;
+        }
+
+        .btn-pixel:active { transform: translateY(4px); box-shadow: none; }
+
+        /* Halaman Kartu Ucapan */
+        #page2 { display: none; }
+        .card-pixel {
+            background: #f0f0f0; border: 6px solid #000;
+            padding: 20px; width: 320px;
+            background-image: linear-gradient(45deg, #e3f2fd 25%, transparent 25%);
+            background-size: 20px 20px;
+        }
+
+        /* ANIMASI KUE PIXEL */
+        #cake-container {
+            position: relative; width: 200px; height: 250px;
+            margin-top: 50px; display: none;
+        }
+
+        .cake-layer {
+            position: absolute; left: 50%; transform: translateX(-50%);
+            border: 3px solid #000; width: 100%; height: 30px;
+            background: #ffc8dd; opacity: 0;
+        }
+
+        .layer-1 { bottom: 0; width: 180px; background: #ffafcc; }
+        .layer-2 { bottom: 30px; width: 150px; background: #ffc8dd; }
+        .layer-3 { bottom: 60px; width: 120px; background: #ffafcc; }
+        .layer-4 { bottom: 90px; width: 90px; background: #ffc8dd; }
+        .layer-5 { bottom: 120px; width: 60px; background: #ffafcc; }
+
+        /* Lilin */
+        .candle {
+            position: absolute; bottom: 150px; left: 50%;
+            width: 10px; height: 30px; background: white;
+            border: 2px solid #000; transform: translateX(-50%);
+            display: none;
+        }
+
+        .flame {
+            position: absolute; top: -15px; left: 50%;
+            width: 12px; height: 18px; background: #ff9f1c;
+            border-radius: 50% 50% 20% 20%;
+            transform: translateX(-50%);
+            animation: flicker 0.3s infinite alternate;
+            box-shadow: 0 0 10px #ff9f1c;
+        }
+
+        @keyframes flicker {
+            0% { transform: translateX(-50%) scale(1); opacity: 0.8; }
+            100% { transform: translateX(-52%) scale(1.1); opacity: 1; }
+        }
+
+        /* Garden & Balon */
+        .garden { position: fixed; bottom: 0; width: 100%; height: 30%; z-index: -1; display: none; }
+        .flower-pixel { position: absolute; bottom: -100px; font-size: 40px; }
+        
+        .firework-text {
+            position: fixed; top: 20%; width: 100%;
+            color: #ff0054; font-size: 20px;
+            text-shadow: 4px 4px #fff; display: none; z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="bgMusic" loop>
+        <source src="https://files.catbox.moe/v2tpxh.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- HALAMAN 1 -->
+    <div id="page1" class="container">
+        <div class="pixel-box">
+            <p style="font-size: 12px; line-height: 1.8;">
+                Happy Birthday Sayangku!<br><br>
+                Semoga apa yang selalu kamu semogakan terwujud ya!
+            </p>
+            <button class="btn-pixel" onclick="goToPage2()">Press to unlock the Gift</button>
+        </div>
+    </div>
+
+    <!-- HALAMAN 2 -->
+    <div id="page2" class="container">
+        <div class="card-pixel">
+            <p style="font-size: 10px; line-height: 1.5;">
+                Happy Birthday Sayangku!<br><br>
+                Selamat sudah mencapai Chapter 26 dalam hidupmu ya!<br><br>
+                Semoga selalu menjadi yang terbaik di hidupmu.<br><br>
+                <span style="color: #1971c2;">Best regards, Bagas</span>
+            </p>
+        </div>
+
+        <!-- Animasi Kue -->
+        <div id="cake-container">
+            <div class="cake-layer layer-1"></div>
+            <div class="cake-layer layer-2"></div>
+            <div class="cake-layer layer-3"></div>
+            <div class="cake-layer layer-4"></div>
+            <div class="cake-layer layer-5"></div>
+            <div class="candle" id="candle"><div class="flame"></div></div>
+        </div>
+
+        <div id="hbd-firework" class="firework-text">HAPPY BIRTHDAY!</div>
+
+        <button class="btn-pixel" id="btnGift" onclick="startCakeAnim()">GIFT</button>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        const music = document.getElementById('bgMusic');
+        let state = 0;
+
+        function goToPage2() {
+            music.play();
+            document.getElementById('page1').style.display = 'none';
+            document.getElementById('page2').style.display = 'flex';
+        }
+
+        function startCakeAnim() {
+            const btn = document.getElementById('btnGift');
+            
+            if (state === 0) {
+                // Sesi Buat Kue
+                btn.style.display = 'none';
+                document.getElementById('cake-container').style.display = 'block';
+                const layers = document.querySelectorAll('.cake-layer');
+                
+                layers.forEach((layer, index) => {
+                    setTimeout(() => {
+                        layer.style.opacity = '1';
+                        layer.animate([{ transform: 'translate(-50%, 20px)' }, { transform: 'translate(-50%, 0)' }], { duration: 800, fill: 'forwards' });
+                    }, index * 1000);
+                });
+
+                setTimeout(() => {
+                    document.getElementById('candle').style.display = 'block';
+                    launchConfetti();
+                    btn.style.display = 'block';
+                    btn.innerText = "GIFT AGAIN!";
+                    state = 1;
+                }, 6000);
+
+            } else {
+                // Sesi Bunga, Balon, Kembang Api
+                spawnFlowers();
+                spawnBalloons();
+                showFireworks();
+            }
+        }
+
+        function spawnFlowers() {
+            const flowers = ['🌻', '🌷', '🌹', '🌸', '🌼', '🌿'];
+            for(let i=0; i<25; i++) {
+                setTimeout(() => {
+                    const f = document.createElement('div');
+                    f.className = 'flower-pixel';
+                    f.innerHTML = flowers[Math.floor(Math.random()*flowers.length)];
+                    f.style.left = Math.random() * 90 + "vw";
+                    document.body.appendChild(f);
+                    f.animate([{ bottom: '-50px' }, { bottom: '0px' }], { duration: 2000, fill: 'forwards' });
+                }, i * 150);
+            }
+        }
+
+        function spawnBalloons() {
+            for(let i=0; i<10; i++) {
+                setTimeout(() => {
+                    const b = document.createElement('div');
+                    b.style.position = 'fixed';
+                    b.style.bottom = '-100px';
+                    b.style.left = Math.random() * 100 + "vw";
+                    b.innerHTML = '🎈';
+                    b.style.fontSize = '40px';
+                    document.body.appendChild(b);
+                    b.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-120vh)' }], { duration: 6000 });
+                }, i * 600);
+            }
+        }
+
+        function showFireworks() {
+            const txt = document.getElementById('hbd-firework');
+            txt.style.display = 'block';
+            
+            const duration = 2000;
+            const animationEnd = Date.now() + duration;
+
+            (function frame() {
+                confetti({ particleCount: 5, spread: 80, origin: { y: 0.3 }, colors: ['#ff0054', '#fbff00', '#00f2ff'] });
+                if (Date.now() < animationEnd) requestAnimationFrame(frame);
+                else txt.style.display = 'none';
+            }());
+        }
+
+        function launchConfetti() {
+            confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+        }
+    </script>
+</body>
+</html>
